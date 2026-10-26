@@ -33,7 +33,7 @@ function validate(input) {
   const email=p.email.trim().toLowerCase();
   if(!Array.isArray(input.answers)||input.answers.length!==KEY.length)throw Error('Complete all 15 questions first.');
   let correct=0;
-  input.answers.forEach((a,i)=>{if(!a||a.id!==KEY[i][0]||!Number.isInteger(a.answer)||a.answer<0||a.answer>3)throw Error('Invalid answers.');if(a.answer===KEY[i][1])correct++;});
+  input.answers.forEach((a,i)=>{if(!a||a.id!==KEY[i][0]||!Number.isInteger(a.answer)||a.answer< -1||a.answer>3)throw Error('Invalid answers.');if(a.answer===KEY[i][1])correct++;});
   if(!Number.isFinite(input.durationSeconds)||input.durationSeconds<0||input.durationSeconds>86400)throw Error('Invalid duration.');
   return {name,department,email,correct,points:correct*100};
 }
@@ -55,13 +55,20 @@ function recordResult(input) {
     return {ok:true,duplicate:false};
   } finally {lock.releaseLock();}
 }
+function checkAttempt(input){
+ if(input.campaign!==SETTINGS.campaign||input.origin!==SETTINGS.origin||!/^[a-f0-9-]{36}$/i.test(input.nonce||''))throw Error('Invalid request.');
+ if(typeof input.email!=='string'||input.email.length>160||!/^\S+@\S+\.\S+$/.test(input.email))throw Error('Please check your email.');
+ const email=input.email.trim().toLowerCase(),s=SpreadsheetApp.openById(SETTINGS.sheetId).getSheetByName('Results'),n=s.getLastRow();
+ const used=n>1&&s.getRange(2,1,n-1,12).getValues().some(r=>r[10]===SETTINGS.campaign&&String(r[2]).toLowerCase()===email);
+ return {ok:true,available:!used};
+}
 function doPost(e) {
   let input={},reply;
   try {
     const raw=e&&e.parameter&&e.parameter.payload;
     if(typeof raw!=='string'||raw.length>12000)throw Error('Invalid submission.');
     input=JSON.parse(raw);
-    reply=recordResult(input);
+    reply=input.action==='check'?checkAttempt(input):recordResult(input);
   } catch(err) {reply={ok:false,message:String(err.message||'Could not record result.').slice(0,180)};}
   const message={type:'fire-quest-result',nonce:input.nonce,...reply};
   const safe=JSON.stringify(message).replace(/</g,'\\u003c');
