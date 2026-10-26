@@ -1,0 +1,55 @@
+/* Thirty original SVG scenes. Each question and learning card uses a distinct composition. */
+window.makeArt=function(type,accent='#b4f568'){
+const ink='#252444',paper='#fbf3de',red='#ed5a62',blue='#3b8dde';
+const line=(d,c=ink,w=7)=>'<path d="'+d+'" fill="none" stroke="'+c+'" stroke-width="'+w+'" stroke-linecap="round" stroke-linejoin="round"/>';
+const rect=(x,y,w,h,c,r=12)=>'<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="'+r+'" fill="'+c+'"/>';
+const circle=(x,y,r,c)=>'<circle cx="'+x+'" cy="'+y+'" r="'+r+'" fill="'+c+'"/>';
+const text=(x,y,t,size=24,c=ink)=>'<text x="'+x+'" y="'+y+'" text-anchor="middle" font-family="Arial,sans-serif" font-size="'+size+'" font-weight="bold" fill="'+c+'">'+t+'</text>';
+const spark=(x,y,s=1)=>'<g transform="translate('+x+' '+y+') scale('+s+')">'+line('M0 -14V14M-14 0H14',paper,4)+'</g>';
+const person=(x,y,c=ink,s=1)=>'<g transform="translate('+x+' '+y+') scale('+s+')">'+circle(0,0,13,c)+rect(-17,20,34,48,c,11)+line('M-10 65L-12 100M10 65L12 100',c,10)+'</g>';
+const flame=(x,y,s=1)=>'<g transform="translate('+x+' '+y+') scale('+s+')"><path d="M0 65C-68 40-45-12-23-28C-28 3-2 4 0-50C55-1 72 39 36 59C26 68 12 69 0 65" fill="#ff813e"/><path d="M3 54C-28 30-8 13 9-2C8 21 37 31 20 49Z" fill="#ffdc69"/></g>';
+const ext=(x,y,s=1,c=red)=>'<g transform="translate('+x+' '+y+') scale('+s+')">'+rect(-34,-66,68,140,c,19)+rect(-13,-88,26,26,ink,4)+line('M-8 -88H38L57 -62',ink,10)+line('M28 -65C80-60 72 12 74 38',ink,8)+rect(60,32,28,32,ink,4)+rect(-25,-24,50,62,paper,5)+flame(0,4,.25)+rect(-30,65,60,9,ink,3)+circle(-4,-61,9,paper)+'</g>';
+const gauge=(x,y,s=1,v='')=>'<g transform="translate('+x+' '+y+') scale('+s+')">'+circle(0,0,57,ink)+circle(0,0,47,paper)+line('M-34 18A38 38 0 0 1 34 -18','#75b86d',8)+line('M0 0L21 -24',red,5)+circle(0,0,6,ink)+text(0,31,v,16)+'</g>';
+const server=(x,y,s=1)=>'<g transform="translate('+x+' '+y+') scale('+s+')">'+rect(-40,-94,80,188,ink,9)+[0,1,2,3].map(i=>rect(-30,-83+i*43,60,33,'#555774',4)+circle(20,-67+i*43,4,accent)+line('M-20 '+(-67+i*43)+'H1',paper,4)).join('')+'</g>';
+const pump=(x,y,s=1,c=red)=>'<g transform="translate('+x+' '+y+') scale('+s+')">'+rect(-70,35,140,15,ink,4)+rect(-50,-10,82,45,c,9)+circle(32,9,27,c)+circle(32,9,14,ink)+rect(43,-50,23,53,c,4)+line('M55 -45V-68H90',ink,13)+line('M-50 15H-85V-25',ink,13)+rect(-33,-30,28,20,ink,5)+'</g>';
+const detector=(x,y,s=1)=>'<g transform="translate('+x+' '+y+') scale('+s+')"><ellipse cy="0" rx="76" ry="23" fill="'+ink+'"/><path d="M-76 0V25C-70 64 69 64 76 25V0" fill="'+paper+'"/><ellipse cy="25" rx="63" ry="18" fill="#d2c7c0"/>'+line('M-46 24H-24M-12 28H10M24 24H46',ink,5)+circle(5,45,4,red)+'</g>';
+const building=(x,y,w=120,h=150,c=paper)=>rect(x,y,w,h,c,8)+Array.from({length:6},(_,i)=>rect(x+15+(i%2)*(w/2),y+18+Math.floor(i/2)*33,w/2-24,18,ink,2)).join('');
+const sign=(x,y,s=1)=>'<g transform="translate('+x+' '+y+') scale('+s+')">'+rect(-85,-60,170,120,'#23885a',9)+rect(-76,-51,152,102,paper,5)+rect(-70,-45,140,90,'#23885a',3)+person(0,-18,paper,.45)+line('M-52 -29L-30 -11M-30 -24V-11H-43M52 -29L30 -11M30 -24V-11H43',paper,5)+line('M0 60V140',ink,10)+'</g>';
+const shield=(x,y,s=1)=>'<g transform="translate('+x+' '+y+') scale('+s+')"><path d="M0-70L65-45V13Q60 62 0 84Q-60 62-65 13V-45Z" fill="'+ink+'"/><path d="M-29 4L-6 29L35-23" fill="none" stroke="'+accent+'" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/></g>';
+let scene='';
+switch(type){
+case 'hero':scene=building(55,140,160,150)+building(325,170,130,120)+ext(257,220,1.7)+spark(410,110)+spark(104,90,.7)+circle(430,250,28,paper)+shield(94,250,.4);break;
+case 'electric':scene=rect(100,100,200,200,ink,18)+rect(120,120,160,160,paper,9)+line('M212 140L177 211H211L190 263',red,13)+flame(348,240,.85)+line('M320 87L340 61M360 112L389 105',ink,5);break;
+case 'co2':scene=ext(176,218,1.5)+[0,1,2,3].map(i=>circle(292+i*33,155+i*15,20+i*8,paper)).join('')+spark(400,236,1.4)+spark(325,100,.7);break;
+case 'powder':scene=ext(250,220,1.6)+circle(97,131,44,paper)+text(97,140,'A',28)+circle(407,132,44,paper)+text(407,141,'B',28)+circle(397,282,44,ink)+text(397,291,'C',28,paper)+spark(107,274);break;
+case 'rating':scene=rect(124,83,268,240,paper,20)+[0,1,2].map((i)=>circle(180+i*64,155,25,[red,blue,'#23885a'][i])+text(180+i*64,164,'ABC'[i],25,paper)).join('')+line('M175 231L214 270L331 206',ink,17)+spark(430,265,.7);break;
+case 'liquid':scene=rect(95,224,320,80,ink,12)+rect(108,235,294,42,blue,5)+flame(185,195,.75)+flame(293,186,.95)+line('M75 218H435',paper,9)+rect(345,104,60,70,paper,8);break;
+case 'bubbles':scene=rect(72,235,368,70,blue)+Array.from({length:18},(_,i)=>circle(90+i*19,226-(i%3)*9,17,paper)).join('')+circle(160,140,30,paper)+circle(224,110,19,paper)+circle(298,155,39,paper)+line('M103 284H410',ink,8);break;
+case 'servers':scene=server(145,218)+server(250,218)+server(355,218)+line('M85 322H415',ink,9)+spark(398,102);break;
+case 'clean':scene=server(163,218,1.1)+shield(337,206,1.05)+spark(281,90,.8)+spark(421,309,.6);break;
+case 'inventory':scene=[0,1,2,3,4].map((i)=>ext(95+i*80,235,.7)).join('')+rect(164,70,188,67,ink)+text(258,117,'312',47,paper);break;
+case 'access':scene=ext(360,198,1.1)+rect(91,211,140,97,ink,9)+line('M80 337H390M239 295L291 295L276 277M291 295L274 312',paper,9)+text(157,192,'KEEP CLEAR',16);break;
+case 'detectors':scene=detector(180,145)+detector(355,229,.8)+line('M74 280Q160 237 235 294M90 307Q160 275 216 318',ink,6)+spark(378,102,.6);break;
+case 'beam':scene=rect(65,137,50,110,ink)+rect(395,137,50,110,ink)+line('M115 191H395',red,7)+[0,1,2].map(i=>circle(240+i*20,185-i*27,16+i*8,paper)).join('')+line('M65 290H445',ink,7);break;
+case 'callpoint':scene=rect(138,80,233,241,red,20)+rect(163,104,183,161,paper,7)+rect(180,121,149,126,ink,6)+line('M235 149L252 166L267 151M252 166V213',paper,7)+text(254,297,'FIRE',23,paper);break;
+case 'signal':scene=circle(243,205,90,red)+circle(243,205,61,paper)+text(243,220,'911',42)+line('M115 130Q76 205 115 280M375 130Q414 205 375 280',ink,12)+spark(126,98)+spark(387,315,.7);break;
+case 'floors':scene=building(115,69,280,260)+[0,2,3].map(i=>rect(126,278-i*55,258,32,blue,5)).join('')+text(254,310,'G',19,paper)+text(254,201,'2',19,paper)+text(254,146,'3',19,paper);break;
+case 'sprinkler':scene=line('M60 89H450',ink,20)+rect(226,85,58,33,ink,5)+rect(244,118,22,59,red,5)+line('M226 181H283',ink,10)+Array.from({length:9},(_,i)=>line('M255 192L'+(95+i*40)+' '+(292-Math.abs(i-4)*6),blue,5)).join('')+spark(404,164,.6);break;
+case 'power':scene=building(68,97,150,225)+rect(261,111,167,208,ink)+line('M352 141L314 209H349L325 275',accent,11)+circle(181,270,9,red)+line('M75 335H434',ink,8);break;
+case 'shield':scene=server(153,220,1.12)+rect(278,137,117,159,paper)+line('M332 161L311 207H340L321 257',ink,9)+shield(258,215,.78);break;
+case 'hose':scene=circle(222,201,113,red)+circle(222,201,85,ink)+circle(222,201,62,red)+circle(222,201,32,ink)+line('M310 207Q410 217 392 300H330',ink,17)+rect(294,283,53,29,paper,6)+rect(160,310,121,18,ink);break;
+case 'sizes':scene=[22,35,56].map((r,i)=>circle(135+i*125,190,r+10,ink)+circle(135+i*125,190,r,paper)+text(135+i*125,290,['1 in','1.5 in','2.5 in'][i],21)).join('')+line('M75 100H440',ink,6);break;
+case 'pumps':scene=pump(122,180,.7)+pump(319,158,1.1)+pump(275,297,.8,blue)+line('M60 328H440',ink,7);break;
+case 'team':scene=pump(260,230,1.5)+gauge(119,119,.55)+gauge(392,115,.55)+line('M135 139L200 180M374 140L335 181',ink,5);break;
+case 'gauges':scene=gauge(123,210,.95,'J')+gauge(257,174,1.1,'E')+gauge(391,210,.95,'D')+line('M123 269V317H391V269M257 241V317',ink,10);break;
+case 'sequence':scene=[8,6,4].map((n,i)=>rect(69+i*135,111+i*25,113,160,ink)+text(125+i*135,205+i*25,n,65,paper)+text(125+i*135,245+i*25,'bar',19,paper)).join('');break;
+case 'location':scene=building(76,174,144,150)+building(292,211,135,113)+line('M320 211V151',ink,9)+'<path d="M287 171Q320 111 353 171Z" fill="'+paper+'"/>'+circle(359,121,27,red)+circle(359,118,10,paper)+line('M359 144L344 166L335 142',red,12);break;
+case 'route':scene=building(311,166,134,155)+line('M80 290H176V189H278',ink,12)+line('M254 168L280 189L254 210',ink,10)+person(91,169,ink,.75)+spark(366,100);break;
+case 'gather':scene=sign(260,157,1.05)+person(117,235,ink,.68)+person(375,244,ink,.68)+person(197,272,ink,.6)+person(311,281,ink,.6);break;
+case 'headcount':scene=rect(106,70,193,260,paper,15)+rect(155,54,92,33,ink,6)+[0,1,2].map(i=>line('M131 '+(132+i*63)+'L145 '+(147+i*63)+'L170 '+(115+i*63),'#23885a',7)+line('M190 '+(135+i*63)+'H270',ink,6)).join('')+person(376,164,ink,1.05);break;
+case 'places':scene=[0,1,2,3].map(i=>rect(63+(i%2)*202,73+Math.floor(i/2)*140,181,117,paper,15)+text(152+(i%2)*202,140+Math.floor(i/2)*140,['ADMIN','PROJECT','PARKING','CANTEEN'][i],20)).join('');break;
+case 'together':scene=sign(263,143,.72)+[0,1,2,3,4].map((i)=>person(102+i*79,234+(i%2)*15,[ink,red,ink,blue,ink][i],.8)).join('')+spark(99,110)+spark(413,120,.7);break;
+default:scene=shield(255,220,1.5);
+}
+return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 510 400" role="img" aria-label="'+type.replace(/[^a-z]/g,' ')+' safety illustration"><defs><pattern id="dots-'+type+'" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.2" fill="'+ink+'" opacity=".14"/></pattern></defs>'+rect(0,0,510,400,accent,0)+'<rect width="510" height="400" fill="url(#dots-'+type+')"/>'+circle(443,25,115,paper)+circle(30,395,113,paper)+'<path d="M-20 356L510 62V400H0Z" fill="'+ink+'" opacity=".045"/>'+scene+spark(450,348,.6)+line('M25 29H64M25 29V67',ink,3)+line('M485 330V370H446',ink,3)+'</svg>';
+};
